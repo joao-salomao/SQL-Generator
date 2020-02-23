@@ -41,7 +41,7 @@ def main():
     if len(sys.argv) < 4:
         print('To few arguments')
         print('You must pass the operation, the table name and the name of the file to be read')
-        print('Example: main.py insert users users.xlsx')
+        print('Example: python sql_generator.py insert users users.xlsx')
         return
 
     fileExtension = sys.argv[3].split('.')[1]
