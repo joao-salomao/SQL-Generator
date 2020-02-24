@@ -38,9 +38,10 @@ def createUpdateSQL(df, tableName):
     sql = ''
     columns = df.columns
     lenColumns = len(columns)
+    base = 'UPDATE ' + tableName + ' SET '
 
     formatter = ''
-    temp = 'UPDATE ' + tableName + ' SET '
+    temp = base
     for i in range(df.shape[0]):
         for k in range(lenColumns):
             if k < lenColumns - 1:
@@ -50,6 +51,7 @@ def createUpdateSQL(df, tableName):
                 formatter = temp + " " + columns[k] + " {}; "
                 temp = formatter.format(str(df[columns[k]][i]))
         sql = sql + temp
+        temp = base
     return sql
 
 def main():
