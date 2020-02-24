@@ -61,11 +61,17 @@ def main():
         print('Example: python sql_generator.py insert users users.xlsx')
         return
 
+    if sys.argv[1] != 'insert' and sys.argv[1] != 'update':
+        print('Operation type invalid')
+        return
+
+    systemEncoder = sys.getfilesystemencoding()
+
     fileExtension = sys.argv[3].split('.')[1]
     if fileExtension == 'xlsx':
-        df = pd.read_excel(sys.argv[3], sheet_name='Sheet1')
+        df = pd.read_excel(sys.argv[3], sheet_name='Sheet1', encoding=systemEncoder)
     else:
-        df = pd.read_csv(sys.argv[3])
+        df = pd.read_csv(sys.argv[3], encoding=systemEncoder)
     
     
     sql = ''
@@ -75,7 +81,7 @@ def main():
     else:
         sql = createUpdateSQL(df, tableName)
 
-    f = open("generated_sql.sql", "w")
+    f = open("generated_sql.sql", "w", encoding=systemEncoder)
     f.write(sql)
-
+    print('SQL successfully generated !')
 main()
