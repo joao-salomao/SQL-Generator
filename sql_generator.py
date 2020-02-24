@@ -24,7 +24,7 @@ def createInsertSQL(df, tableName):
                 temp = formatter.format(str(df[columns[k]][i]))
             else:
                 formatter = temp + "'{}')"
-                temp = temp = formatter.format(str(df[columns[k]][i]))
+                temp = formatter.format(str(df[columns[k]][i]))
     
         if i < df.shape[0] - 1 :
             sql = (sql +
@@ -32,10 +32,25 @@ def createInsertSQL(df, tableName):
         else:
             sql = (sql +
                 temp + ';')
-            
-    print(sql)
     return sql
+    
+def createUpdateSQL(df, tableName):
+    sql = ''
+    columns = df.columns
+    lenColumns = len(columns)
 
+    formatter = ''
+    temp = 'UPDATE ' + tableName + ' SET '
+    for i in range(df.shape[0]):
+        for k in range(lenColumns):
+            if k < lenColumns - 1:
+                formatter = temp + " " + columns[k] + " = '{}',"
+                temp = formatter.format(str(df[columns[k]][i]))
+            else:
+                formatter = temp + " " + columns[k] + " {}; "
+                temp = formatter.format(str(df[columns[k]][i]))
+        sql = sql + temp
+    return sql
 
 def main():
     if len(sys.argv) < 4:
@@ -55,6 +70,8 @@ def main():
     tableName = sys.argv[2]
     if sys.argv[1] == 'insert':
         sql = createInsertSQL(df, tableName)
+    else:
+        sql = createUpdateSQL(df, tableName)
 
     f = open("generated_sql.sql", "w")
     f.write(sql)
