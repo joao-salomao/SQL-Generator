@@ -1,4 +1,4 @@
-# SQL-Generator
+# SQL Generator
 Script Generator é um script feito com Python 3 para gerar arquivos SQL a partir de planilhas.
   - É necessário ter o pacote pandas instalado para que o script funcione. 
   - Para mais informações sobre a instalação dessse pacote acesse o site: https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
