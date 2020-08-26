@@ -1,0 +1,1 @@
+UPDATE users SET  name = 'João', idade = '200', WHERE Id = 1; UPDATE users SET  name = 'Lara', idade = '123', WHERE Id = 3; 

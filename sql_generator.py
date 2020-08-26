@@ -1,5 +1,17 @@
 import sys
-import pandas as pd
+reload(sys)
+
+try:
+    import pandas as pd
+except ImportError:
+    print("Can't find pandas module")
+    print("Type the command 'pip install pandas' to install the module")
+
+systemEncoder = sys.getfilesystemencoding()
+sys.setdefaultencoding(systemEncoder)
+
+
+# pip install xlrd
 
 def createInsertSQL(df, tableName):
     sql = 'INSERT INTO ' + tableName + '('
@@ -16,22 +28,21 @@ def createInsertSQL(df, tableName):
     formatter = ''
     for i in range(df.shape[0]):
         for k in range(lenColumns):
+            value = str(df[columns[k]][i])
             if k == 0:
                 formatter = "('{}',"
-                temp = formatter.format(str(df[columns[k]][i]))
+                temp = formatter.format(value)
             elif k < lenColumns-1:
                 formatter = temp + "'{}',"
-                temp = formatter.format(str(df[columns[k]][i]))
+                temp = formatter.format(value)
             else:
                 formatter = temp + "'{}')"
-                temp = formatter.format(str(df[columns[k]][i]))
+                temp = formatter.format(value)
     
         if i < df.shape[0] - 1 :
-            sql = (sql +
-                temp + ',')
+            sql = sql + temp + ','
         else:
-            sql = (sql +
-                temp + ';')
+            sql = sql + temp + ';'
     return sql
     
 def createUpdateSQL(df, tableName):
@@ -44,12 +55,13 @@ def createUpdateSQL(df, tableName):
     temp = base
     for i in range(df.shape[0]):
         for k in range(lenColumns):
+            value = str(df[columns[k]][i])
             if k < lenColumns - 1:
                 formatter = temp + " " + columns[k] + " = '{}',"
-                temp = formatter.format(str(df[columns[k]][i]))
+                temp = formatter.format(value)
             else:
                 formatter = temp + " " + columns[k] + " {}; "
-                temp = formatter.format(str(df[columns[k]][i]))
+                temp = formatter.format(value)
         sql = sql + temp
         temp = base
     return sql
@@ -65,13 +77,11 @@ def main():
         print('Operation type invalid')
         return
 
-    systemEncoder = sys.getfilesystemencoding()
-
     fileExtension = sys.argv[3].split('.')[1]
     if fileExtension == 'xlsx':
-        df = pd.read_excel(sys.argv[3], sheet_name='Sheet1', encoding=systemEncoder)
+        df = pd.read_excel(sys.argv[3], sheet_name='Sheet1')
     else:
-        df = pd.read_csv(sys.argv[3], encoding=systemEncoder)
+        df = pd.read_csv(sys.argv[3])
     
     
     sql = ''
@@ -81,7 +91,6 @@ def main():
     else:
         sql = createUpdateSQL(df, tableName)
 
-    f = open("generated_sql.sql", "w", encoding=systemEncoder)
-    f.write(sql)
+    open("generated_sql.sql", "w").write(sql)
     print('SQL successfully generated !')
 main()
