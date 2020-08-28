@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} Generated SQL {% endblock %}</h2>
+    <div class="container">
+        <code>
+            {{
+                sql
+            }}
+        </code>
+    </div>
+{% endblock %}
