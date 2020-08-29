@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>{% block title %} Generated SQL {% endblock %}</h2>
+<div class="row">
+    <div class="col-sm">
+        <h2>Generated SQL</h2>
+    </div>
+    <div class="col-sm">
+        <a class="btn btn-link float-right" href="/">Generate New SQL</a>
+    </div>
+  </div>
     <div class="container">
         <code>
             {{
