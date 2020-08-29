@@ -2,7 +2,7 @@ import pandas as pd
 from flask import Flask, render_template, request, flash, redirect
 from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql, file_is_allowed
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'TOP_SECRET'
 
 
