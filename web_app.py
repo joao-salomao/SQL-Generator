@@ -1,6 +1,6 @@
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect
-from sql_generator import ALLOWED_OPERATIONS, ALLOWED_EXTENSIONS,create_insert_sql, create_update_sql
+from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql, file_is_allowed
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'TOP_SECRET'
@@ -46,7 +46,7 @@ def validate_request():
         flash('No selected file')
         return redirect(request.url)
 
-    if allowed_file(request.files['file'].filename) == False:
+    if file_is_allowed(request.files['file'].filename) == False:
         flash('File not allowed')
         return redirect(request.url)
 
