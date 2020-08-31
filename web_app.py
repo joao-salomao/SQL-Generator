@@ -1,6 +1,6 @@
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect
-from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql, file_is_allowed
+from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql, create_delete_sql, file_is_allowed
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'TOP_SECRET'
@@ -23,7 +23,10 @@ def index():
             sql = create_insert_sql(df, table_name)
 
         if operation_type == 'update':
-            sql = create_update_sql(df, table_name)   
+            sql = create_update_sql(df, table_name) 
+        
+        if operation_type == 'delete':
+            sql = create_delete_sql(df, table_name) 
             
         return render_template('generated_sql.html', sql=sql)
 
