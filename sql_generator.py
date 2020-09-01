@@ -69,7 +69,7 @@ def create_delete_sql(df, table_name):
     sql = ''
     columns = df.columns
     len_columns = len(columns)
-    base = 'DELETE ' + table_name + ' WHERE '
+    base = 'DELETE FROM ' + table_name + ' WHERE '
     formatter = ''
     temp = base
 

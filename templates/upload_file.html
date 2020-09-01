@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-2">
   <div class="col-sm">
-    <h2>SQL Generator</h2>
+    <h2 class="mb-0">SQL Generator</h2>
+    <small>
+      An SQL code generator from spreadsheet files
+    </small>
   </div>
   <div class="col-sm">
     <button type="button" class="btn btn-link float-right" data-toggle="modal" data-target="#how-to-use-modal">
@@ -27,15 +30,15 @@
       </select>
     </div>
     <div class="form-group">
-      <input required id="file" type=file name=file>
+      <input required accept=".xlsx,.csv" id="file" type=file name=file>
     </div>
-    <a  href="https://github.com/joao-salomao/SQL-Generator">
+    <a href="https://github.com/joao-salomao/SQL-Generator">
       <img height="50" width="50" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png">
     </a>
     <button type="submit" class="btn btn-primary float-right">Generate SQL</button>
   </div>
-  <div class="modal fade" id="how-to-use-modal" tabindex="-1"  aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+  <div class="modal fade" id="how-to-use-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">How to use</h5>
@@ -44,13 +47,56 @@
           </button>
         </div>
         <div class="modal-body">
-          <b>SQL Generator is an SQL code generator from spreadsheet files.</b><br>
-          <b>For the INSERT operation:</b><br>
-          The first row of the spreadsheet must be containing the column names. Ex:<br>
-          <img width="450" src="/static/images/insert_example.png" alt="Insert example">
-          <b>For the UPDATE operation:</b><br>  
-          The first row of the spreadsheet must be containing the column names and the last column of the first row must contain the WHERE condition. Ex:
-          <img width="450" src="/static/images/update_example.png" alt="Update example">
+          <p>Currently the file formats allowed are: xlsx and csv.</p>
+          <p>If you are using files in the xlsx format, the spreadsheet named with the default name "Sheet1" will be used.</p>
+          <small>*All the examples showed bellow will be using a table called "users".</small>
+          <p><b>For the INSERT operation:</b></p>
+          <p>The first row of the spreadsheet must contain the column names and the others the data. Ex:</p>
+          <div class="d-flex justify-content-center w-100 mb-2">
+            <img class="mb-2" width="450" src="/static/images/insert_example.png" alt="Insert example">
+          </div>
+          <p>The result will be like this:</p>
+          <div>
+            <p> INSERT INTO users(name,idade,data) VALUES ('João',200,'2020-08-10 00:00:00'),
+            </p>
+            <p>
+              ('Mariza',123,'2020-08-11 00:00:00'),('Valcir',200,'2020-08-12 00:00:00'),
+            </p>
+            <p>
+              ('Lara',123,'2020-08-13 00:00:00');
+            </p>
+          </div><br>
+          <p><b>For the UPDATE operation:</b></p>
+          <p>
+            The first row of the spreadsheet must contain the column names, the last column of the first row must
+            contain the WHERE clause and the other lines the data used for the update, the last column being the
+            condition used in the WHERE clause. Ex:
+          </p>
+          <div class="d-flex justify-content-center w-100 mb-2">
+            <img class="mb-2" width="450" src="/static/images/update_example.png" alt="Update example">
+          </div>
+          <p>The result will be like this:</p>
+          <div>
+            <p>UPDATE users SET name = 'João', likes = 200, data = '2020-08-10 00:00:00' WHERE id = 1;</p>
+            <p>UPDATE users SET name = 'Mariza', likes = 123, data = '2020-08-11 00:00:00' WHERE id = 2;</p>
+            <p>UPDATE users SET name = 'Valcir', likes = 200, data = '2020-08-12 00:00:00' WHERE id = 3;</p>
+            <p>UPDATE users SET name = 'Lara', likes = 123, data = '2020-08-13 00:00:00' WHERE id = 4;</p>
+          </div><br>
+          <p><b>For the DELETE operation:</b></p>
+          <p>
+            The use for the delete operation is similar to that of update, the difference being that all the columns
+            defined in the first row are used in the construction of the WHERE clause. Ex:
+          </p>
+          <div class="d-flex justify-content-center w-100 mb-2">
+            <img src="/static/images/delete_example.png" alt="Delete example">
+          </div>
+          <p>The result will be like this:</p>
+          <div>
+            <p>DELETE FROM users WHERE id = 1 AND name = 'João' AND age = 21;</p>
+            <p>DELETE FROM users WHERE id = 2 AND name = 'Mariza' AND age = 41;</p>
+            <p>DELETE FROM users WHERE id = 3 AND name = 'Valcir' AND age = 53;</p>
+            <p>DELETE FROM users WHERE id = 4 AND name = 'Lara' AND age = 22;</p>
+          </div>
         </div>
       </div>
     </div>
