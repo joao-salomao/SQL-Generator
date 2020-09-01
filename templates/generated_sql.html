@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-2">
     <div class="col-sm">
-        <h2>SQL Generator</h2>
+        <h2 class="mb-0">SQL Generator</h2>
+        <small>
+          An SQL code generator from spreadsheet files
+        </small>
     </div>
     <div class="col-sm">
         <div class="float-right">
@@ -24,13 +27,11 @@
         </div>
     </div>
 </div>
-<div class="container">
-    <code id="code" style="color: black;">
-        {{
-            sql
-        }}
-    </code>
-</div>
+<p id="code" style="color: black;">
+    {{
+        sql
+    }}
+</p>
 <script>
     function copyCodeToClipboard() {
         const text = document.getElementById("code").innerText;
