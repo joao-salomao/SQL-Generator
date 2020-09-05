@@ -30,30 +30,29 @@ def index():
             
         return render_template('generated_sql.html', sql=sql)
 
-    return render_template('upload_file.html')
+    return render_template('form.html')
 
 
 def validate_request():
-    if 'table_name' not in request.form:
-        flash('Table name is required')
-        return False
-    
+    is_valid = True
+
     if len(request.form['table_name']) == 0:
         flash('Table name is required')
+        is_valid = False
 
     if 'file' not in request.files:
         flash('No file part')
-        return False
+        is_valid = False
 
-    if request.files['file'].filename == '':
+    if len(request.files['file'].filename) == 0:
         flash('No selected file')
-        return False
+        is_valid = False
 
     if file_is_allowed(request.files['file'].filename) == False:
         flash('File not allowed')
-        return False
+        is_valid = False
 
     if request.form['operation_type'] not in ALLOWED_OPERATIONS:
         flash('Operation type invalid')
-        return False
-    return True
+        is_valid = False
+    return is_valid
