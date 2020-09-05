@@ -21,9 +21,6 @@
   <body>
     <div class="d-flex justify-content-center mt-4 h-100 w-100">
       <div class="card align-middle p-4" style="width: 700px;">
-        {% for message in get_flashed_messages() %}
-            <div class="alert alert-danger mt-2">{{ message }}</div>
-        {% endfor %}
         {% block content %} {% endblock %}
       </div>
     </div>
