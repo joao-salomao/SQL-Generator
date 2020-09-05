@@ -1,33 +1,19 @@
-import pandas as pd
+import sql_generator as g
 from flask import Flask, render_template, request, flash, redirect
-from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql, create_delete_sql, file_is_allowed
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'TOP_SECRET'
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if validate_request() == False:
-            return redirect(request.url)
-
+    if request.method == 'POST' and validate_request() == True:
         file = request.files['file']
         table_name = request.form['table_name']
         operation_type = request.form['operation_type']
+       
+        df = g.get_dataframe(file)
+        sql = g.OPERATION_HANDLER[operation_type](df, table_name)   
 
-        df = pd.read_excel(file, sheet_name='Sheet1')
-        sql = ''
-
-        if operation_type == 'insert':
-            sql = create_insert_sql(df, table_name)
-
-        if operation_type == 'update':
-            sql = create_update_sql(df, table_name) 
-        
-        if operation_type == 'delete':
-            sql = create_delete_sql(df, table_name) 
-            
         return render_template('generated_sql.html', sql=sql)
 
     return render_template('form.html')
@@ -48,11 +34,11 @@ def validate_request():
         flash('No selected file')
         is_valid = False
 
-    if file_is_allowed(request.files['file'].filename) == False:
+    if g.file_is_allowed(request.files['file'].filename) == False:
         flash('File not allowed')
         is_valid = False
 
-    if request.form['operation_type'] not in ALLOWED_OPERATIONS:
+    if request.form['operation_type'] not in g.ALLOWED_OPERATIONS:
         flash('Operation type invalid')
         is_valid = False
     return is_valid
