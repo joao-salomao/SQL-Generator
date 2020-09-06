@@ -9,9 +9,9 @@ def index():
     if request.method == 'POST' and validate_request() == True:
         file = request.files['file']
         table_name = request.form['table_name']
-        operation_type = request.form['operation_type']
-       
-        sql = g.OPERATION_HANDLER[operation_type](file, table_name)   
+        operation = request.form['operation']
+
+        sql = g.generate_sql(file, table_name, operation)
         return render_template('generated_sql.html', sql=sql)
 
     return render_template('form.html')
@@ -36,7 +36,7 @@ def validate_request():
         flash('File not allowed')
         is_valid = False
 
-    if request.form['operation_type'] not in g.ALLOWED_OPERATIONS:
-        flash('Operation type invalid')
+    if  g.operation_is_allowed(request.form['operation']) == False:
+        flash('Invalid operation')
         is_valid = False
     return is_valid
