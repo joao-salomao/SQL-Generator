@@ -11,7 +11,7 @@ def operation_is_allowed(operation):
     return operation in ALLOWED_OPERATIONS
     
 def parse_value_to_sql_builder(value):
-    if isinstance(value, str) or isinstance(value, pd._libs.tslibs.timestamps.Timestamp) or isinstance(value, unicode):
+    if isinstance(value, str) or isinstance(value, pd._libs.tslibs.timestamps.Timestamp):
         return "'{}'".format(value)
     if isinstance(value, numpy.int64) or isinstance(value, numpy.float64):
         return "{}".format(str(value))
