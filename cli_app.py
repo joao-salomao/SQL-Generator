@@ -1,45 +1,30 @@
-import sys
-from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql
-try:
-    import pandas as pd
-except ImportError:
-    print("Can't find pandas module")
-    print("Type the command 'pip install pandas' to install the module")
+from sys import argv
+from sql_generator import generate_sql, operation_is_allowed, file_is_allowed
 
-
-## Install to work with Excel ##
-# pip install xlrd
-
-
-##  Enable to fix encoding errors ##
-#reload(sys)
-#systemEncoder = sys.getfilesystemencoding()
-#sys.setdefaultencoding(systemEncoder)
-
-def main():
-    if len(sys.argv) < 4:
-        print('To few arguments')
+def validate_args():
+    if len(argv) < 4:
+        print('> To few arguments <')
         print('You must pass the operation, the table name and the name of the file to be read')
         print('Example: python cli_app.py insert users users.xlsx')
+        return False
+
+    if operation_is_allowed(argv[1]) == False:
+        print('> Operation not allowed <')
+        print('The allowed operations are: insert, update, delete.')
+        return False
+
+    if file_is_allowed(argv[3]) == False:
+        print('> File not allowed <')
+        print('The allowed extensions are: xlsx and csv.')
+        return False
+
+def main():
+    if validate_args() == False:
         return
-
-    if sys.argv[1] not in ALLOWED_OPERATIONS:
-        print('Operation type invalid')
-        return
-
-    fileExtension = sys.argv[3].split('.')[1]
-    if fileExtension == 'xlsx':
-        df = pd.read_excel(sys.argv[3], sheet_name='Sheet1')
-    else:
-        df = pd.read_csv(sys.argv[3])
-
-
-    sql = ''
-    tableName = sys.argv[2]
-    if sys.argv[1] == 'insert':
-        sql = create_insert_sql(df, tableName)
-    else:
-        sql = create_update_sql(df, tableName)
+    operation = argv[1]
+    table_name = argv[2]
+    file = argv[3]
+    sql = generate_sql(file, table_name, operation)
 
     open("generated_sql.sql", "w").write(sql)
     print('SQL successfully generated !')

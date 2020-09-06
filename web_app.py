@@ -1,59 +1,42 @@
-import pandas as pd
-from flask import Flask, render_template, request, flash, redirect
-from sql_generator import ALLOWED_OPERATIONS, create_insert_sql, create_update_sql, create_delete_sql, file_is_allowed
+from flask import Flask, render_template, request, flash
+from sql_generator import generate_sql, operation_is_allowed, file_is_allowed
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'TOP_SECRET'
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if validate_request() == False:
-            return redirect(request.url)
-
+    if request.method == 'POST' and validate_request() == True:
         file = request.files['file']
         table_name = request.form['table_name']
-        operation_type = request.form['operation_type']
+        operation = request.form['operation']
 
-        df = pd.read_excel(file, sheet_name='Sheet1')
-        sql = ''
-
-        if operation_type == 'insert':
-            sql = create_insert_sql(df, table_name)
-
-        if operation_type == 'update':
-            sql = create_update_sql(df, table_name) 
-        
-        if operation_type == 'delete':
-            sql = create_delete_sql(df, table_name) 
-            
+        sql = generate_sql(file, table_name, operation)
         return render_template('generated_sql.html', sql=sql)
 
-    return render_template('upload_file.html')
+    return render_template('form.html')
 
 
 def validate_request():
-    if 'table_name' not in request.form:
-        flash('Table name is required')
-        return False
-    
+    is_valid = True
+
     if len(request.form['table_name']) == 0:
         flash('Table name is required')
+        is_valid = False
 
     if 'file' not in request.files:
         flash('No file part')
-        return False
+        is_valid = False
 
-    if request.files['file'].filename == '':
+    if len(request.files['file'].filename) == 0:
         flash('No selected file')
-        return False
+        is_valid = False
 
     if file_is_allowed(request.files['file'].filename) == False:
         flash('File not allowed')
-        return False
+        is_valid = False
 
-    if request.form['operation_type'] not in ALLOWED_OPERATIONS:
-        flash('Operation type invalid')
-        return False
-    return True
+    if operation_is_allowed(request.form['operation']) == False:
+        flash('Invalid operation')
+        is_valid = False
+    return is_valid

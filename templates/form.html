@@ -15,6 +15,11 @@
   </div>
 </div>
 <form method=post enctype=multipart/form-data>
+  <div class="row pr-3 pl-3">
+    {% for message in get_flashed_messages() %}
+    <div class="col-sm alert alert-danger mr-1">{{ message }}</div>
+    {% endfor %}
+  </div>
   <div>
     <div class="form-group">
       <label for="table_name">Table name</label>
@@ -23,7 +28,7 @@
     </div>
     <div class="form-group">
       <label for="operation-type">Operation type</label>
-      <select required name="operation_type" class="form-control" id="operation-type">
+      <select required name="operation" class="form-control" id="operation-type">
         <option value="insert">Insert</option>
         <option value="update">Update</option>
         <option value="delete">Delete</option>
@@ -41,14 +46,15 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">How to use</h5>
+          <h5 class="modal-title">How to use</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <p>Currently the file formats allowed are: xlsx and csv.</p>
-          <p>If you are using files in the xlsx format, the spreadsheet named with the default name "Sheet1" will be used.</p>
+          <p>If you are using files in the xlsx format, the spreadsheet named with the default name "Sheet1" will be
+            used.</p>
           <small>*All the examples showed bellow will be using a table called "users".</small>
           <p><b>For the INSERT operation:</b></p>
           <p>The first row of the spreadsheet must contain the column names and the others the data. Ex:</p>
