@@ -1,5 +1,5 @@
-import sql_generator as g
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash
+from sql_generator import generate_sql, operation_is_allowed, file_is_allowed
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'TOP_SECRET'
@@ -11,7 +11,7 @@ def index():
         table_name = request.form['table_name']
         operation = request.form['operation']
 
-        sql = g.generate_sql(file, table_name, operation)
+        sql = generate_sql(file, table_name, operation)
         return render_template('generated_sql.html', sql=sql)
 
     return render_template('form.html')
@@ -32,11 +32,11 @@ def validate_request():
         flash('No selected file')
         is_valid = False
 
-    if g.file_is_allowed(request.files['file'].filename) == False:
+    if file_is_allowed(request.files['file'].filename) == False:
         flash('File not allowed')
         is_valid = False
 
-    if  g.operation_is_allowed(request.form['operation']) == False:
+    if operation_is_allowed(request.form['operation']) == False:
         flash('Invalid operation')
         is_valid = False
     return is_valid
