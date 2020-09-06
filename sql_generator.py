@@ -1,23 +1,23 @@
 import numpy
 import pandas as pd
 
+ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
+ALLOWED_OPERATIONS = {'insert', 'update', 'delete'}
+
 def file_is_allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def get_dataframe(file):
-    if file.filename.rsplit('.', 1)[1] == 'xlsx':
-        return pd.read_excel(file, sheet_name='Sheet1')
-    return pd.read_csv(file)
+def operation_is_allowed(operation):
+    return operation in ALLOWED_OPERATIONS
     
 def parse_value_to_sql_builder(value):
-    if isinstance(value, str) or isinstance(value, pd._libs.tslibs.timestamps.Timestamp):
+    if isinstance(value, str) or isinstance(value, pd._libs.tslibs.timestamps.Timestamp) or isinstance(value, unicode):
         return "'{}'".format(value)
     if isinstance(value, numpy.int64) or isinstance(value, numpy.float64):
         return "{}".format(str(value))
 
-def create_insert_sql(file, table_name):
+def create_insert_sql(df, table_name):
     sql = 'INSERT INTO ' + table_name + '('
-    df = get_dataframe(file)
     columns = df.columns
     len_columns = len(columns)
     
@@ -48,9 +48,8 @@ def create_insert_sql(file, table_name):
             sql = sql + temp + ';'
     return sql
 
-def create_update_sql(file, table_name):
+def create_update_sql(df, table_name):
     sql = ''
-    df = get_dataframe(file)
     columns = df.columns
     len_columns = len(columns)
     base = 'UPDATE ' + table_name + ' SET '
@@ -75,9 +74,8 @@ def create_update_sql(file, table_name):
     return sql
 
 
-def create_delete_sql(file, table_name):
+def create_delete_sql(df, table_name):
     sql = ''
-    df = get_dataframe(file)
     columns = df.columns
     len_columns = len(columns)
     base = 'DELETE FROM ' + table_name + ' WHERE '
@@ -99,10 +97,22 @@ def create_delete_sql(file, table_name):
 
     return sql
 
-ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
-ALLOWED_OPERATIONS = {'insert', 'update', 'delete'}
-OPERATION_HANDLER = {
-    'insert': create_insert_sql,
-    'update': create_update_sql,
-    'delete': create_delete_sql
-}
+def get_dataframe(file):
+    is_xlsx = False
+    if type(file) == str:
+        is_xlsx = file.rsplit('.', 1)[1] == 'xlsx'
+    else:
+        is_xlsx = file.filename.rsplit('.', 1)[1] == 'xlsx'
+
+    if is_xlsx == True:
+        return pd.read_excel(file, sheet_name='Sheet1')
+
+    return pd.read_csv(file)
+
+def generate_sql(file, table_name, operation):
+    df = get_dataframe(file)
+    return {
+        'insert': create_insert_sql,
+        'update': create_update_sql,
+        'delete': create_delete_sql
+    }[operation](df, table_name)
