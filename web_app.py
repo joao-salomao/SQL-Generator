@@ -11,9 +11,7 @@ def index():
         table_name = request.form['table_name']
         operation_type = request.form['operation_type']
        
-        df = g.get_dataframe(file)
-        sql = g.OPERATION_HANDLER[operation_type](df, table_name)   
-
+        sql = g.OPERATION_HANDLER[operation_type](file, table_name)   
         return render_template('generated_sql.html', sql=sql)
 
     return render_template('form.html')

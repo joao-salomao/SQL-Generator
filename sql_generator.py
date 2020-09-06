@@ -15,8 +15,9 @@ def parse_value_to_sql_builder(value):
     if isinstance(value, numpy.int64) or isinstance(value, numpy.float64):
         return "{}".format(str(value))
 
-def create_insert_sql(df, table_name):
+def create_insert_sql(file, table_name):
     sql = 'INSERT INTO ' + table_name + '('
+    df = get_dataframe(file)
     columns = df.columns
     len_columns = len(columns)
     
@@ -47,8 +48,9 @@ def create_insert_sql(df, table_name):
             sql = sql + temp + ';'
     return sql
 
-def create_update_sql(df, table_name):
+def create_update_sql(file, table_name):
     sql = ''
+    df = get_dataframe(file)
     columns = df.columns
     len_columns = len(columns)
     base = 'UPDATE ' + table_name + ' SET '
@@ -73,8 +75,9 @@ def create_update_sql(df, table_name):
     return sql
 
 
-def create_delete_sql(df, table_name):
+def create_delete_sql(file, table_name):
     sql = ''
+    df = get_dataframe(file)
     columns = df.columns
     len_columns = len(columns)
     base = 'DELETE FROM ' + table_name + ' WHERE '
