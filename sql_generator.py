@@ -52,7 +52,7 @@ def create_update_sql(df, table_name):
     sql = ''
     columns = df.columns
     len_columns = len(columns)
-    base = 'UPDATE ' + table_name + ' SET '
+    base = 'UPDATE ' + table_name + ' SET'
 
     formatter = ''
     temp = base

@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from unittest import TestCase, main
-from sql_generator import operation_is_allowed, file_is_allowed, create_insert_sql
+from sql_generator import operation_is_allowed, file_is_allowed, create_insert_sql, create_update_sql
 
 class TestValidations(TestCase):
     def test_should_allow_operation(self):
@@ -54,6 +54,44 @@ class TestCreateInsertSQL(TestCase):
             expected = case["expected"]
             table_name = case["table_name"]
             self.assertEqual(expected, create_insert_sql(df, table_name))
+
+
+class TestCreateUpdateSQL(TestCase):
+    def setUp(self):
+        self.data = [
+            {
+                "table_name": "accounts",
+                "dataframe": DataFrame({
+                    'name': ['Jane', 'Victor', 'Bob'],
+                    'likes': [3000, 2460, 3450],
+                    'WHERE': ['id = 1','id = 2','id = 3'],
+                }),
+                "expected": "UPDATE accounts SET name = 'Jane', likes = 3000 WHERE id = 1; UPDATE accounts SET name = 'Victor', likes = 2460 WHERE id = 2; UPDATE accounts SET name = 'Bob', likes = 3450 WHERE id = 3; "
+            },
+            {
+                "table_name": "salaries",
+                "dataframe": DataFrame({
+                    'salary': [3000.5, 2460.9, 3450.2],
+                    'WHERE': ['user_id = 1','user_id = 2','user_id = 3'],
+                }),
+                "expected": "UPDATE salaries SET salary = 3000.5 WHERE user_id = 1; UPDATE salaries SET salary = 2460.9 WHERE user_id = 2; UPDATE salaries SET salary = 3450.2 WHERE user_id = 3; "
+            },
+        ]
+
+    def test_should_create_update_sql(self):
+        for case in self.data:
+            df =case["dataframe"]
+            expected = case["expected"]
+            table_name = case["table_name"]
+            self.assertEqual(expected, create_update_sql(df, table_name))
+
+
+    def test_should_return_string(self):
+        for case in self.data:
+            df =case["dataframe"]
+            expected = case["expected"]
+            table_name = case["table_name"]
+            self.assertIsInstance(create_update_sql(df, table_name), str)
 
 if __name__ == '__main__':
     main(verbosity=2)
