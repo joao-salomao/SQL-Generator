@@ -71,7 +71,7 @@ def create_update_sql(df, table_name):
                 temp = formatter.format(str(df[columns[k]][i]))
         sql = sql + temp
         temp = base
-    return sql
+    return sql.strip()
 
 
 def create_delete_sql(df, table_name):
