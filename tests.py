@@ -53,8 +53,11 @@ class TestCreateInsertSQL(TestCase):
             df =case["dataframe"]
             expected = case["expected"]
             table_name = case["table_name"]
-            self.assertEqual(expected, create_insert_sql(df, table_name))
+            result = create_insert_sql(df, table_name)
 
+            self.assertIsInstance(result, str)
+            self.assertEqual(expected, result)
+            
 
 class TestCreateUpdateSQL(TestCase):
     def setUp(self):
@@ -83,15 +86,11 @@ class TestCreateUpdateSQL(TestCase):
             df =case["dataframe"]
             expected = case["expected"]
             table_name = case["table_name"]
-            self.assertEqual(expected, create_update_sql(df, table_name))
+            result = create_update_sql(df, table_name)
 
+            self.assertIsInstance(result, str)
+            self.assertEqual(expected, result)
 
-    def test_should_return_string(self):
-        for case in self.data:
-            df =case["dataframe"]
-            expected = case["expected"]
-            table_name = case["table_name"]
-            self.assertIsInstance(create_update_sql(df, table_name), str)
 
 if __name__ == '__main__':
     main(verbosity=2)
