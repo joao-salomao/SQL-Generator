@@ -23,7 +23,7 @@ def create_insert_sql(df, table_name):
     
     for i in range(len_columns):
         if i < len_columns - 1:
-            sql = sql + columns[i] + ','
+            sql = sql + columns[i] + ', '
         else:
             sql = sql + columns[i] + ') VALUES '
 
@@ -33,17 +33,17 @@ def create_insert_sql(df, table_name):
         for k in range(len_columns):
             value = parse_value_to_sql_builder(df[columns[k]][i])
             if k == 0:
-                formatter = "({},"
+                formatter = "({}, "
                 temp = formatter.format(value)
             elif k < len_columns-1:
-                formatter = temp + "{},"
+                formatter = temp + "{}, "
                 temp = formatter.format(value)
             else:
                 formatter = temp + "{})"
                 temp = formatter.format(value)
     
         if i < df.shape[0] - 1 :
-            sql = sql + temp + ','
+            sql = sql + temp + ', '
         else:
             sql = sql + temp + ';'
     return sql
