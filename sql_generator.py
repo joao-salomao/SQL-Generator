@@ -78,7 +78,7 @@ def create_delete_sql(df, table_name):
     sql = ''
     columns = df.columns
     len_columns = len(columns)
-    base = 'DELETE FROM ' + table_name + ' WHERE '
+    base = 'DELETE FROM ' + table_name + ' WHERE'
     formatter = ''
     temp = base
 
@@ -87,7 +87,7 @@ def create_delete_sql(df, table_name):
             column = columns[k]
             value = parse_value_to_sql_builder(df[columns[k]][i])
             if k < len_columns - 1:
-                formatter = temp + " " + column + " = {} AND "
+                formatter = temp + " " + column + " = {} AND"
                 temp = formatter.format(value)
             else:
                 formatter = temp + " " + column + " = {}; "
@@ -95,7 +95,7 @@ def create_delete_sql(df, table_name):
         sql = sql + temp
         temp = base
 
-    return sql
+    return sql.strip()
 
 def get_dataframe(file):
     is_xlsx = False

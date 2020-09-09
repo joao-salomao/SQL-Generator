@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from unittest import TestCase, main
-from sql_generator import operation_is_allowed, file_is_allowed, create_insert_sql, create_update_sql
+from sql_generator import operation_is_allowed, file_is_allowed, create_insert_sql, create_update_sql, create_delete_sql
 
 class TestValidations(TestCase):
     def test_should_allow_operation(self):
@@ -87,6 +87,39 @@ class TestCreateUpdateSQL(TestCase):
             expected = case["expected"]
             table_name = case["table_name"]
             result = create_update_sql(df, table_name)
+
+            self.assertIsInstance(result, str)
+            self.assertEqual(expected, result)
+
+
+
+class TestCreateDeleteSQL(TestCase):
+    def setUp(self):
+        self.data = [
+            {
+                "table_name": "accounts",
+                "dataframe": DataFrame({
+                    'name': ['Jane', 'Victor', 'Bob'],
+                    'likes': [3000, 2460, 3450],
+                }),
+                "expected": "DELETE FROM accounts WHERE name = 'Jane' AND likes = 3000; DELETE FROM accounts WHERE name = 'Victor' AND likes = 2460; DELETE FROM accounts WHERE name = 'Bob' AND likes = 3450;"
+            },
+            {
+                "table_name": "salaries",
+                "dataframe": DataFrame({
+                    'salary': [3000.5, 2460.9, 3450.2],
+                    'user_id': [1,2,3],
+                }),
+                "expected": "DELETE FROM salaries WHERE salary = 3000.5 AND user_id = 1; DELETE FROM salaries WHERE salary = 2460.9 AND user_id = 2; DELETE FROM salaries WHERE salary = 3450.2 AND user_id = 3;"
+            },
+        ]
+
+    def test_should_create_delete_sql(self):
+        for case in self.data:
+            df =case["dataframe"]
+            expected = case["expected"]
+            table_name = case["table_name"]
+            result = create_delete_sql(df, table_name)
 
             self.assertIsInstance(result, str)
             self.assertEqual(expected, result)
