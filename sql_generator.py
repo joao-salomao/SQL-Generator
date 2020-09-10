@@ -23,7 +23,7 @@ def create_insert_sql(df, table_name):
     
     for i in range(len_columns):
         if i < len_columns - 1:
-            sql = sql + columns[i] + ','
+            sql = sql + columns[i] + ', '
         else:
             sql = sql + columns[i] + ') VALUES '
 
@@ -33,17 +33,17 @@ def create_insert_sql(df, table_name):
         for k in range(len_columns):
             value = parse_value_to_sql_builder(df[columns[k]][i])
             if k == 0:
-                formatter = "({},"
+                formatter = "({}, "
                 temp = formatter.format(value)
             elif k < len_columns-1:
-                formatter = temp + "{},"
+                formatter = temp + "{}, "
                 temp = formatter.format(value)
             else:
                 formatter = temp + "{})"
                 temp = formatter.format(value)
     
         if i < df.shape[0] - 1 :
-            sql = sql + temp + ','
+            sql = sql + temp + ', '
         else:
             sql = sql + temp + ';'
     return sql
@@ -52,7 +52,7 @@ def create_update_sql(df, table_name):
     sql = ''
     columns = df.columns
     len_columns = len(columns)
-    base = 'UPDATE ' + table_name + ' SET '
+    base = 'UPDATE ' + table_name + ' SET'
 
     formatter = ''
     temp = base
@@ -71,14 +71,14 @@ def create_update_sql(df, table_name):
                 temp = formatter.format(str(df[columns[k]][i]))
         sql = sql + temp
         temp = base
-    return sql
+    return sql.strip()
 
 
 def create_delete_sql(df, table_name):
     sql = ''
     columns = df.columns
     len_columns = len(columns)
-    base = 'DELETE FROM ' + table_name + ' WHERE '
+    base = 'DELETE FROM ' + table_name + ' WHERE'
     formatter = ''
     temp = base
 
@@ -87,7 +87,7 @@ def create_delete_sql(df, table_name):
             column = columns[k]
             value = parse_value_to_sql_builder(df[columns[k]][i])
             if k < len_columns - 1:
-                formatter = temp + " " + column + " = {} AND "
+                formatter = temp + " " + column + " = {} AND"
                 temp = formatter.format(value)
             else:
                 formatter = temp + " " + column + " = {}; "
@@ -95,22 +95,25 @@ def create_delete_sql(df, table_name):
         sql = sql + temp
         temp = base
 
-    return sql
+    return sql.strip()
 
-def get_dataframe(file):
-    is_xlsx = False
-    if type(file) == str:
-        is_xlsx = file.rsplit('.', 1)[1] == 'xlsx'
-    else:
-        is_xlsx = file.filename.rsplit('.', 1)[1] == 'xlsx'
+def get_dataframe(file, filename):
+    if file_is_allowed(filename) == False:
+        raise Exception("File not allowed")
 
-    if is_xlsx == True:
-        return pd.read_excel(file, sheet_name='Sheet1')
+    try:
+        ext = filename.rsplit('.', 1)[1]
+        if ext == 'xlsx':
+            return pd.read_excel(file, sheet_name='Sheet1')
+        return pd.read_csv(file)
+    except Exception as e:
+        raise e
 
-    return pd.read_csv(file)
-
-def generate_sql(file, table_name, operation):
-    df = get_dataframe(file)
+def generate_sql(file, filename, table_name, operation):
+    if operation_is_allowed(operation) == False:
+        raise Exception('Operation not allowed')
+    
+    df = get_dataframe(file, filename)
     return {
         'insert': create_insert_sql,
         'update': create_update_sql,

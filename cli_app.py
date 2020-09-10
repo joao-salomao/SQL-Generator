@@ -22,11 +22,16 @@ def main():
     if validate_args() == False:
         return
     operation = argv[1]
+    file_path = argv[3]
     table_name = argv[2]
-    file = argv[3]
-    sql = generate_sql(file, table_name, operation)
 
-    open("generated_sql.sql", "w").write(sql)
-    print('SQL successfully generated !')
+    try:
+        sql = generate_sql(file_path, file_path, table_name, operation)
+        open("generated_sql.sql", "w").write(sql)
+        print('SQL successfully generated !')
+    except Exception as e:
+        print('Some error occurred when generating the SQL. Try Again.')
+        print(e)
+
 
 main()
