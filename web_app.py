@@ -8,11 +8,14 @@ app.config['SECRET_KEY'] = 'TOP_SECRET'
 def index():
     if request.method == 'POST' and validate_request() == True:
         file = request.files['file']
-        table_name = request.form['table_name']
         operation = request.form['operation']
+        table_name = request.form['table_name']
 
-        sql = generate_sql(file, table_name, operation)
-        return render_template('generated_sql.html', sql=sql)
+        try:
+            sql = generate_sql(file, file.filename, table_name, operation)
+            return render_template('generated_sql.html', sql=sql)
+        except:
+            flash('Some error occurred when generating the SQL. Try Again.')
 
     return render_template('form.html')
 

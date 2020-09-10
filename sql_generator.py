@@ -97,20 +97,23 @@ def create_delete_sql(df, table_name):
 
     return sql.strip()
 
-def get_dataframe(file):
-    is_xlsx = False
-    if type(file) == str:
-        is_xlsx = file.rsplit('.', 1)[1] == 'xlsx'
-    else:
-        is_xlsx = file.filename.rsplit('.', 1)[1] == 'xlsx'
+def get_dataframe(file, filename):
+    if file_is_allowed(filename) == False:
+        raise Exception("File not allowed")
 
-    if is_xlsx == True:
-        return pd.read_excel(file, sheet_name='Sheet1')
+    try:
+        ext = filename.rsplit('.', 1)[1]
+        if ext == 'xlsx':
+            return pd.read_excel(file, sheet_name='Sheet1')
+        return pd.read_csv(file)
+    except Exception as e:
+        raise e
 
-    return pd.read_csv(file)
-
-def generate_sql(file, table_name, operation):
-    df = get_dataframe(file)
+def generate_sql(file, filename, table_name, operation):
+    if operation_is_allowed(operation) == False:
+        raise Exception('Operation not allowed')
+    
+    df = get_dataframe(file, filename)
     return {
         'insert': create_insert_sql,
         'update': create_update_sql,
