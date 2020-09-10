@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from unittest import TestCase, main
-from sql_generator import operation_is_allowed, file_is_allowed, create_insert_sql, create_update_sql, create_delete_sql, generate_sql
+from sql_generator import create_insert_sql, create_update_sql, create_delete_sql
+from sql_generator import operation_is_allowed, file_is_allowed, generate_sql, get_dataframe
 
 class TestSQLGenerator(TestCase):
     def setUp(self):
@@ -96,9 +97,9 @@ class TestSQLGenerator(TestCase):
             self.assertEqual(expected, result)
 
     def test_should_generate_sql(self):
-        result_insert = generate_sql("test_insert.xlsx", 'users', 'insert')
-        result_update = generate_sql("test_update.xlsx", 'users', 'update')
-        result_delete = generate_sql("test_delete.xlsx", 'users', 'delete')
+        result_insert = generate_sql('test_insert.xlsx', 'test_insert.xlsx', 'users', 'insert')
+        result_update = generate_sql('test_update.xlsx','test_update.xlsx', 'users', 'update')
+        result_delete = generate_sql('test_delete.xlsx', 'test_delete.xlsx', 'users', 'delete')
 
         self.assertIsInstance(result_insert, str)
         self.assertTrue(len(result_insert) > 0)
@@ -130,6 +131,17 @@ class TestSQLGenerator(TestCase):
         self.assertFalse(file_is_allowed('users.exe'))
         self.assertFalse(file_is_allowed('users.py'))
         self.assertFalse(file_is_allowed('users.ots'))
+
+    def test_should_get_dataframe(self):
+        self.assertIsInstance(get_dataframe('test_insert.xlsx', 'test_insert.xlsx'), DataFrame)
+        self.assertIsInstance(get_dataframe('test_update.xlsx', 'test_update.xlsx'), DataFrame)
+        self.assertIsInstance(get_dataframe('test_delete.xlsx', 'test_delete.xlsx'), DataFrame)
+
+        with self.assertRaises(Exception):
+            self.assertIsInstance(get_dataframe('asdasd', 'hjgh.asd'), DataFrame)
+            self.assertIsInstance(get_dataframe('asdasd', 'qweq.gasd'), DataFrame)
+            self.assertIsInstance(get_dataframe('asdasd', 'qwewq.qweq'), DataFrame)
+
 
 if __name__ == '__main__':
     main(verbosity=2)
