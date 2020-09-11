@@ -1,1 +1,1 @@
-web: gunicorn web_app:app
+web: gunicorn sql_generator/web_app:app
