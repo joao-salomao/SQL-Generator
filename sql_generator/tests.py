@@ -97,9 +97,9 @@ class TestSQLGenerator(TestCase):
             self.assertEqual(expected, result)
 
     def test_should_generate_sql(self):
-        result_insert = generate_sql('files/test_insert.xlsx', 'files/test_insert.xlsx', 'users', 'insert')
-        result_update = generate_sql('files/test_update.xlsx','files/test_update.xlsx', 'users', 'update')
-        result_delete = generate_sql('files/test_delete.xlsx', 'files/test_delete.xlsx', 'users', 'delete')
+        result_insert = generate_sql('sql_generator/files/test_insert.xlsx', 'sql_generator/files/test_insert.xlsx', 'users', 'insert')
+        result_update = generate_sql('sql_generator/files/test_update.xlsx','sql_generator/files/test_update.xlsx', 'users', 'update')
+        result_delete = generate_sql('sql_generator/files/test_delete.xlsx', 'sql_generator/files/test_delete.xlsx', 'users', 'delete')
 
         self.assertIsInstance(result_insert, str)
         self.assertTrue(len(result_insert) > 0)
@@ -133,9 +133,9 @@ class TestSQLGenerator(TestCase):
         self.assertFalse(file_is_allowed('users.ots'))
 
     def test_should_get_dataframe(self):
-        self.assertIsInstance(get_dataframe('files/test_insert.xlsx', 'files/test_insert.xlsx'), DataFrame)
-        self.assertIsInstance(get_dataframe('files/test_update.xlsx', 'files/test_update.xlsx'), DataFrame)
-        self.assertIsInstance(get_dataframe('files/test_delete.xlsx', 'files/test_delete.xlsx'), DataFrame)
+        self.assertIsInstance(get_dataframe('sql_generator/files/test_insert.xlsx', 'sql_generator/files/test_insert.xlsx'), DataFrame)
+        self.assertIsInstance(get_dataframe('sql_generator/files/test_update.xlsx', 'sql_generator/files/test_update.xlsx'), DataFrame)
+        self.assertIsInstance(get_dataframe('sql_generator/files/test_delete.xlsx', 'sql_generator/files/test_delete.xlsx'), DataFrame)
 
         with self.assertRaises(Exception):
             self.assertIsInstance(get_dataframe('asdasd', 'hjgh.asd'), DataFrame)
