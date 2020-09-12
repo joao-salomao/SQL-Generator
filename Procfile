@@ -1,1 +1,1 @@
-web: cd sql_generator && gunicorn web_app:app
+web: cd sql_generator && gunicorn -t 120 -w 3 web_app:app
