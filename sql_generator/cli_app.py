@@ -1,7 +1,7 @@
 from sys import argv
 from sql_generator import generate_sql, operation_is_allowed, file_is_allowed
 
-def validate_args():
+def validate_args() -> bool:
     if len(argv) < 4:
         print('> To few arguments <')
         print('You must pass the operation, the table name and the name of the file to be read')
