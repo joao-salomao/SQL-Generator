@@ -23,7 +23,7 @@ If you are using files in the xlsx format, the spreadsheet named with the defaul
 
 Command:
 ```bash
- python3 cli_app.py OPERATION TABLE_NAME FILE_PATH
+ python3 sql_generator.py OPERATION TABLE_NAME FILE_PATH
 ```
 
 ###  Examples
@@ -34,7 +34,7 @@ The first row of the spreadsheet must contain the column names and the others th
 Run:
 
 ```bash
- python3 cli_app.py insert users users.xlsx
+ python3 sql_generator.py insert users users.xlsx
 ```
 
 The result will be like this:
@@ -51,7 +51,7 @@ The first row of the spreadsheet must contain the column names, the last column 
 
 Run:
 ```bash
- python3 cli_app.py update users users.xlsx
+ python3 sql_generator.py update users users.xlsx
 ```
 
 The result will be like this:
@@ -70,7 +70,7 @@ The use for the delete operation is similar to that of update, the difference be
 Run:
 
 ```bash
- python3 cli_app.py delete users users.xlsx
+ python3 sql_generator.py delete users users.xlsx
 ```
 The result will be like this:
 ```sql
