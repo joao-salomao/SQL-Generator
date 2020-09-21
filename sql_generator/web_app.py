@@ -20,7 +20,7 @@ def index():
     return render_template('form.html')
 
 
-def validate_request():
+def validate_request() -> bool:
     is_valid = True
 
     if len(request.form['table_name']) == 0:
@@ -43,3 +43,7 @@ def validate_request():
         flash('Invalid operation')
         is_valid = False
     return is_valid
+
+if (__name__ == '__main__'):
+    app.config["ENV"] = 'development'
+    app.run(host='0.0.0.0', port=5000, debug=True)
