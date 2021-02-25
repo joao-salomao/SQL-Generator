@@ -1,6 +1,8 @@
 # SQL Generator
 
 SQL Generator is an SQL code generator from spreadsheet files
+
+[![Unit Test](https://github.com/joao-salomao/SQL-Generator/actions/workflows/python-app.yml/badge.svg)](https://github.com/joao-salomao/SQL-Generator/actions/workflows/python-app.yml)
 ## Web
 Access the website on [Heroku](https://sqlgenerator.herokuapp.com/).
 ## CLI
