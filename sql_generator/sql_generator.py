@@ -4,6 +4,7 @@ from numpy import int64, float64
 from werkzeug.datastructures import FileStorage
 from pandas import read_excel, read_csv, DataFrame
 from pandas._libs.tslibs.timestamps import Timestamp
+from datetime import datetime
 
 ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
 ALLOWED_OPERATIONS = {'insert', 'update', 'delete'}
@@ -15,8 +16,8 @@ def operation_is_allowed(operation: str) -> bool:
     return operation in ALLOWED_OPERATIONS
     
 def parse_value_to_sql_builder(value: Union[str, int64, float64, Timestamp]) -> str:
-    if isinstance(value, str) or isinstance(value, Timestamp):
-        return "'{}'".format(value)
+    if isinstance(value, str) or isinstance(value, Timestamp) or isinstance(value, datetime):
+        return '"{}"'.format(value)
     if isinstance(value, int64) or isinstance(value, float64):
         return "{}".format(str(value))
     raise Exception("Error parsing value to sql builder")
