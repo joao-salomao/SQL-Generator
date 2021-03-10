@@ -13,7 +13,7 @@ class TestSQLGenerator(TestCase):
                     'name': ['Jane', 'Victor', 'Bob'],
                     'salary': [2500.6, 1000.5, 3450.1]
                 }),
-                "expected": "INSERT INTO users(id, name, salary) VALUES (1, 'Jane', 2500.6), (2, 'Victor', 1000.5), (3, 'Bob', 3450.1);"
+                "expected": 'INSERT INTO users(id, name, salary) VALUES (1, "Jane", 2500.6), (2, "Victor", 1000.5), (3, "Bob", 3450.1);'
             },
             {
                 "table_name": "companies",
@@ -22,7 +22,7 @@ class TestSQLGenerator(TestCase):
                     'company_name': ['Apple', 'AOC', 'Samsung', 'LG'],
                     'market_price': [300000000000, 99999999, 46464646464646, 123123123123]
                 }),
-                "expected": "INSERT INTO companies(id, company_name, market_price) VALUES (333, 'Apple', 300000000000), (414, 'AOC', 99999999), (578, 'Samsung', 46464646464646), (1234, 'LG', 123123123123);"
+                "expected": 'INSERT INTO companies(id, company_name, market_price) VALUES (333, "Apple", 300000000000), (414, "AOC", 99999999), (578, "Samsung", 46464646464646), (1234, "LG", 123123123123);'
             }
         ]
 
@@ -34,7 +34,7 @@ class TestSQLGenerator(TestCase):
                     'likes': [3000, 2460, 3450],
                     'WHERE': ['id = 1','id = 2','id = 3'],
                 }),
-                "expected": "UPDATE accounts SET name = 'Jane', likes = 3000 WHERE id = 1; UPDATE accounts SET name = 'Victor', likes = 2460 WHERE id = 2; UPDATE accounts SET name = 'Bob', likes = 3450 WHERE id = 3;"
+                "expected": 'UPDATE accounts SET name = "Jane", likes = 3000 WHERE id = 1; UPDATE accounts SET name = "Victor", likes = 2460 WHERE id = 2; UPDATE accounts SET name = "Bob", likes = 3450 WHERE id = 3;'
             },
             {
                 "table_name": "salaries",
@@ -53,7 +53,7 @@ class TestSQLGenerator(TestCase):
                     'name': ['Jane', 'Victor', 'Bob'],
                     'likes': [3000, 2460, 3450],
                 }),
-                "expected": "DELETE FROM accounts WHERE name = 'Jane' AND likes = 3000; DELETE FROM accounts WHERE name = 'Victor' AND likes = 2460; DELETE FROM accounts WHERE name = 'Bob' AND likes = 3450;"
+                "expected": 'DELETE FROM accounts WHERE name = "Jane" AND likes = 3000; DELETE FROM accounts WHERE name = "Victor" AND likes = 2460; DELETE FROM accounts WHERE name = "Bob" AND likes = 3450;'
             },
             {
                 "table_name": "salaries",

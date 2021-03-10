@@ -1,3 +1,4 @@
+env
 sql_generator/__pycache__
 sql_generator/generated_sql.sql
 sql_generator/sql_generator.pyc
